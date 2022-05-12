@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 include '../../config/database.php';
 
 // cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+if ($_SESSION['role'] != "kasir") {
     // alihkan ke halaman login
     header('location:../../auth/login.php');
 }
@@ -102,7 +102,7 @@ $query = mysqli_query($conn, $sql);
 
                     <!-- add -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="report.php">
                             <i class="icon-grid mr-2 text-secondary" data-feather="database"></i>
                             <span class="menu-title">Laporan</span>
                         </a>
@@ -128,7 +128,7 @@ $query = mysqli_query($conn, $sql);
                                     <h3 class="font-weight-bold">Hai, <?= $fname; ?>😊</h3>
                                     <h6 class="font-weight-normal mb-0">
                                         <span class="text-primary">
-                                            CSO | aplikasi management cafe kamu!
+                                            <?= $_SESSION['role'] ?> | aplikasi management cafe kamu!
                                         </span>
                                     </h6>
                                 </div>
@@ -141,28 +141,50 @@ $query = mysqli_query($conn, $sql);
                         $no = 1;
                         while ($data = mysqli_fetch_array($query)) {
                         ?>
-                            <div class="card col-lg-3 mr-2 mt-2 col-md-12">
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item"><strong><?= $data['nama_menu']; ?></strong></li>
-                                        <li class="list-group-item">
-                                            <span class="text-success">
-                                                <strong>
+                            <div class="card col-lg-4 mr-3 mt-3 mb-3 col-md-12">
+                                <form action="../../app/kasir/pesanan.php" method="POST">
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <input type="text" name="nama" placeholder="Pemesan" class="mb-2 form-control" style="width: 100%;">
+                                                <select name="no_meja" class="form-control">
+                                                    <option value="">- No Meja -</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input type="text" name="pesanan" readonly class="form-control bg-primary text-light" value="<?= $data['nama_menu']; ?>">
+                                                <span class="text-success" style="font-weight: bold;">
                                                     Rp. <?php
                                                         if ($data['harga'] == true) {
                                                             echo number_format($data['harga'], 0, ',', '.');
                                                         } else {
                                                             echo 0;
                                                         }
-                                                        ?></td>
-                                                </strong>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="card-body">
-                                    <button class="btn btn-success" style="width: 100%;">Pesan</button>
-                                </div>
+                                                        ?>
+                                                </span>
+                                                <input type="hidden" class="form-control" name="harga" value="<?= $data["harga"] ?>">
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <input type="number" min="0" placeholder="Mau pesan berapa?" class="form-control mb-2" name="jumlah">
+                                                <input type="text" class="form-control" name="bayar" placeholder="Jangan lupa bayar yah!">
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <button class="btn btn-success" name="pesan" style="width: 100%;">Pesan & Bayar</button>
+                                    </div>
+                                </form>
                             </div>
                         <?php } ?>
                     </div>

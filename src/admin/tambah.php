@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 include '../../config/database.php';
 
 // cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+if ($_SESSION['role'] != "admin") {
     // alihkan ke halaman login
     header('location:../../auth/login.php');
 }
@@ -133,7 +133,7 @@ $query = mysqli_query($conn, $sql);
                         <div class="col-md-12 grid-margin">
                             <div class="row">
                                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                                    <h3 class="font-weight-bold">Tambah data <button type="button" class="btn btn-success px-3 py-1" data-toggle="modal" data-target="#addUser"><span style="font-size: 18px;">+</span></button></h3>
+                                    <h3 class="font-weight-bold">Tambah user <button type="button" class="btn btn-success px-3 py-1" data-toggle="modal" data-target="#addUser"><span style="font-size: 18px;">+</span></button></h3>
                                     <h6 class="font-weight-normal mb-0">
                                         <span class="text-primary">
                                             Management user disini!
@@ -182,7 +182,7 @@ $query = mysqli_query($conn, $sql);
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive p-4" style="background: #fff; border-radius: 25px;">
                         <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr class="text-center table-info">
@@ -199,17 +199,24 @@ $query = mysqli_query($conn, $sql);
                                 $no = 1;
                                 while ($data = mysqli_fetch_array($query)) {
                                 ?>
-                                    <tr class="text-center table-warning">
+                                    <tr class="text-center">
                                         <td><?php echo $no++ ?></td>
                                         <td><?php echo $data['nama'] ?></td>
                                         <td><?php echo $data['username'] ?></td>
                                         <td><?php echo $data['password'] ?></td>
                                         <td><?php echo $data['role'] ?></td>
                                         <td>
-                                            <a href='../../app/admin/delete.php?id=<?= $data['id'] ?>'>
-                                                <button class="btn btn-danger px-2"><i data-feather="trash-2"></i></button>
-                                            </a>
-                                            <button class="btn btn-info px-2"><i data-feather="edit"></i></button>
+                                            <?php if ($_SESSION["nama"] == $data["nama"]) : ?>
+                                                <span class="text-center">-</span>
+                                            <?php else : ?>
+                                                <a href='../../app/admin/delete.php?id=<?= $data['id'] ?>'>
+                                                    <button class="btn btn-danger px-2"><i data-feather="trash-2"></i></button>
+                                                </a>
+
+                                                <a href='edit.php?id=<?= $data["id"] ?>'>
+                                                    <button class="btn btn-info px-2"><i data-feather="edit"></i></button>
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php } ?>

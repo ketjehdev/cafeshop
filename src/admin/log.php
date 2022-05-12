@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 include '../../config/database.php';
 
 // cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+if ($_SESSION['role'] != "admin") {
     // alihkan ke halaman login
     header('location:../../auth/login.php');
 }
@@ -150,9 +150,9 @@ $query = mysqli_query($conn, $sql);
                             <thead>
                                 <tr class="text-center table-info">
                                     <th class="th-sm">#</th>
-                                    <th class="th-sm">Username</th>
-                                    <th class="th-sm">Role</th>
-                                    <th class="th-sm">Activity</th>
+                                    <th class="th-sm">Nama</th>
+                                    <th class="th-sm">Status</th>
+                                    <th class="th-sm">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,9 +162,9 @@ $query = mysqli_query($conn, $sql);
                                 ?>
                                     <tr class="text-center table-warning">
                                         <td><?php echo $no++ ?></td>
-                                        <td><?php echo $data['username'] ?></td>
-                                        <td><?php echo $data['role'] ?></td>
-                                        <td><?php echo $data['aksi'] ?></td>
+                                        <td><?php echo $data['nama_pegawai'] ?></td>
+                                        <td><?php echo $data['status'] ?></td>
+                                        <td><?php echo $data['date'] ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

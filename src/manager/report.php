@@ -14,28 +14,20 @@ if ($_SESSION['role'] != "manager") {
 $full_name = $_SESSION['nama'];
 $fname = explode(' ', trim($full_name))[0];
 
-// sql select all data
-$sql = "SELECT * FROM menu";
-
-// query all data users with connection database
-$query = mysqli_query($conn, $sql);
-
 date_default_timezone_set('Asia/Jakarta');
 $today = date('ymd', strtotime('today'));
 
-// count net income +7 day (week)
-$sqlNetIncomeDay = "SELECT SUM(bayar) FROM report WHERE $today <= exp_day";
-$queryNetIncomeDay = mysqli_query($conn, $sqlNetIncomeDay);
-$fetchDataIncomeDay = mysqli_fetch_array($queryNetIncomeDay);
+// sql select all data with conditional if +7 day
+$sql = "SELECT * FROM report WHERE $today <= exp_day";
 
-$jumlah_income_day = $fetchDataIncomeDay[0];
+// query all data users with connection database sesuai logic di sql
+$query = mysqli_query($conn, $sql);
 
-// count net income +30 day (week)
-$sqlNetIncomeWeek = "SELECT SUM(bayar) FROM report WHERE $today >= exp_week OR $today <= exp_week";
-$queryNetIncomeWeek = mysqli_query($conn, $sqlNetIncomeWeek);
-$fetchDataIncomeWeek = mysqli_fetch_array($queryNetIncomeWeek);
+// sql select all data with conditional if +7 day
+$sqlBulanan = "SELECT * FROM report WHERE $today > exp_week or $today > exp_day";
 
-$jumlah_income_week = $fetchDataIncomeWeek[0];
+// query all data users with connection database sesuai logic di sql
+$queryBulanan = mysqli_query($conn, $sqlBulanan);
 
 ?>
 
@@ -47,7 +39,7 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
     <meta charset="utf-8">
     <meta name="theme-color" content="cyan">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= ucfirst($_SESSION['title']) ?> Pendapatan | CSO</title>
+    <title><?= ucfirst($_SESSION['title']) ?> Report | CSO</title>
 
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../public/vendors/feather/feather.css">
@@ -68,6 +60,7 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
 </head>
 
 <body>
+
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" style="z-index: 100;">
@@ -127,7 +120,7 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
                     <!-- report -->
                     <li class="nav-item">
                         <a class="nav-link" href="report.php">
-                            <i class="icon-grid mr-2 text-secondary" data-feather="database"></i>
+                            <i class="icon-grid mr-2 text-light" data-feather="database"></i>
                             <span class="menu-title">Laporan</span>
                         </a>
                     </li>
@@ -135,7 +128,7 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
                     <!-- pendapatan -->
                     <li class="nav-item">
                         <a class="nav-link" href="pendapatan.php">
-                            <i class="icon-grid mr-2 text-light" data-feather="dollar-sign"></i>
+                            <i class="icon-grid mr-2 text-secondary" data-feather="dollar-sign"></i>
                             <span class="menu-title">Pendapatan</span>
                         </a>
                     </li>
@@ -165,10 +158,10 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
                         <div class="col-md-12 grid-margin">
                             <div class="row">
                                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                                    <h3 class="font-weight-bold">Pendapatan (Net Income)
+                                    <h3 class="font-weight-bold">Laporan
                                         <h6 class="font-weight-normal mb-0">
                                             <span class="text-primary">
-                                                Total pendapatan cafe kamu disini!
+                                                Laporan transaksi cafe kamu!
                                             </span>
                                         </h6>
                                 </div>
@@ -176,43 +169,74 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-5 text-light p-3 mb-2 mr-2 bg-primary" style="background: red;height:20vh;border-radius: 18px;">
-                            <h3 class="mb-0">Pendapatan Harian</h3>
-                            <p>pendapatan cafe kamu selama 7 hari</p>
-                            <h4>
-                                <strong>
-                                    Rp. <?php
-                                        if ($jumlah_income_day == true) {
-                                            echo number_format($jumlah_income_day, 0, ',', '.');
-                                        } else {
-                                            echo 0;
-                                        }
+                    <div class="table-responsive p-4" style="background: #fff; border-radius: 25px;">
+                        <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
 
-                                        ?>
-
-
-                                </strong>
-                            </h4>
-                        </div>
-                        <div class="col-md-5 p-3 mb-2 mr-1 text-dark bg-warning" style="background: red;height:20vh;border-radius: 18px;">
-                            <h3 class="mb-0">Pendapatan Bulanan</h3>
-                            <p>pendapatan cafe kamu selama 30 hari</p>
-                            <h4>
-                                <strong>
-                                    Rp.
-                                    <?php
-                                    if ($jumlah_income_week == true) {
-                                        echo number_format($jumlah_income_week, 0, ',', '.');
-                                    } else {
-                                        echo 0;
-                                    }
-                                    ?>
-                                </strong>
-
-                            </h4>
-                        </div>
+                            <h4 class="mb-4">Laporan Harian</h4>
+                            <thead>
+                                <tr class="text-center table-info">
+                                    <th class="th-sm">#</th>
+                                    <th class="th-sm">Nama</th>
+                                    <th class="th-sm">Pesanan</th>
+                                    <th class="th-sm">Harga</th>
+                                    <th class="th-sm">Jumlah</th>
+                                    <th class="th-sm">Bayar</th>
+                                    <th class="th-sm">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $no = 1;
+                                while ($data = mysqli_fetch_array($query)) {
+                                ?>
+                                    <tr class="text-center">
+                                        <td><?php echo $no++ ?></td>
+                                        <td><?php echo $data['nama'] ?></td>
+                                        <td><?php echo $data['pesanan'] ?></td>
+                                        <td>Rp. <?php echo number_format($data['harga'], 0, ',', '.'); ?></td>
+                                        <td><?php echo $data['jumlah'] ?></td>
+                                        <td>Rp. <?php echo number_format($data['bayar'], 0, ',', '.'); ?></td>
+                                        <td><?php echo $data['created_at'] ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
+
+                    <div class="table-responsive mt-4 p-4" style="background: #fff; border-radius: 25px;">
+                        <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
+
+                            <h4 class="mb-4">Laporan Bulanan</h4>
+                            <thead>
+                                <tr class="text-center table-info">
+                                    <th class="th-sm">#</th>
+                                    <th class="th-sm">Nama</th>
+                                    <th class="th-sm">Pesanan</th>
+                                    <th class="th-sm">Harga</th>
+                                    <th class="th-sm">Jumlah</th>
+                                    <th class="th-sm">Bayar</th>
+                                    <th class="th-sm">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $no = 1;
+                                while ($dataBulanan = mysqli_fetch_array($queryBulanan)) {
+                                ?>
+                                    <tr class="text-center">
+                                        <td><?php echo $no++ ?></td>
+                                        <td><?php echo $dataBulanan['nama'] ?></td>
+                                        <td><?php echo $dataBulanan['pesanan'] ?></td>
+                                        <td>Rp. <?php echo number_format($dataBulanan['harga'], 0, ',', '.'); ?></td>
+                                        <td><?php echo $dataBulanan['jumlah'] ?></td>
+                                        <td>Rp. <?php echo number_format($dataBulanan['bayar'], 0, ',', '.'); ?></td>
+                                        <td><?php echo $dataBulanan['created_at'] ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
 
                 <!-- content-wrapper ends -->
@@ -263,11 +287,6 @@ $jumlah_income_week = $fetchDataIncomeWeek[0];
             $('.dataTables_length').addClass('bs-select');
         });
     </script>
-
-    <!-- script cleave n money -->
-    <script src="../../public/js/cleave.js"></script>
-    <script src="../../public/js/money.js"></script>
-    <!-- end script cleave n money -->
 </body>
 
 </html>

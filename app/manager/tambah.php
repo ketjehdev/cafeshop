@@ -5,7 +5,7 @@ include '../../config/database.php';
 // Check If form submitted, insert form data into users table.
 if (isset($_POST['submit'])) {
     $nama_menu = $_POST['nama_menu'];
-    $harga = $_POST['harga'];
+    $harga = str_replace(array('Rp.', '.'), array('', ''), $_POST['harga']);
 
     // Insert user data into table
     $result = mysqli_query($conn, "INSERT INTO menu(nama_menu,harga) VALUES('$nama_menu','$harga')");

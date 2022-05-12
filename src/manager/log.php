@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 include '../../config/database.php';
 
 // cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+if ($_SESSION['role'] != "manager") {
     // alihkan ke halaman login
     header('location:../../auth/login.php');
 }
@@ -108,6 +108,14 @@ $query = mysqli_query($conn, $sql);
                         </a>
                     </li>
 
+                    <!-- report -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.php">
+                            <i class="icon-grid mr-2 text-secondary" data-feather="database"></i>
+                            <span class="menu-title">Laporan</span>
+                        </a>
+                    </li>
+
                     <!-- pendapatan -->
                     <li class="nav-item">
                         <a class="nav-link" href="pendapatan.php">
@@ -119,7 +127,7 @@ $query = mysqli_query($conn, $sql);
                     <!-- log -->
                     <li class="nav-item">
                         <a class="nav-link" href="log.php">
-                            <i class="icon-grid mr-2 text-light" data-feather="navigation"></i>
+                            <i class="icon-grid mr-2 text-secondary" data-feather="navigation"></i>
                             <span class="menu-title">Log activity</span>
                         </a>
                     </li>
@@ -158,9 +166,9 @@ $query = mysqli_query($conn, $sql);
                             <thead>
                                 <tr class="text-center table-info">
                                     <th class="th-sm">#</th>
-                                    <th class="th-sm">Username</th>
-                                    <th class="th-sm">Role</th>
-                                    <th class="th-sm">Activity</th>
+                                    <th class="th-sm">Nama</th>
+                                    <th class="th-sm">Status</th>
+                                    <th class="th-sm">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -170,9 +178,9 @@ $query = mysqli_query($conn, $sql);
                                 ?>
                                     <tr class="text-center table-warning">
                                         <td><?php echo $no++ ?></td>
-                                        <td><?php echo $data['username'] ?></td>
-                                        <td><?php echo $data['role'] ?></td>
-                                        <td><?php echo $data['aksi'] ?></td>
+                                        <td><?php echo $data['nama_pegawai'] ?></td>
+                                        <td><?php echo $data['status'] ?></td>
+                                        <td><?php echo $data['date'] ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

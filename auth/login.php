@@ -1,3 +1,43 @@
+<?php
+
+session_start();
+
+include '../config/database.php';
+
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+
+    // cek username
+    if (mysqli_num_rows($result) === 1) {
+        // cek pw
+        $item = mysqli_fetch_assoc($result);
+        if ($item["password"] == $password) {
+            if ($item["role"] == "admin") {
+                $_SESSION["nama"] = $item['nama'];
+                $_SESSION["role"] = $item['role'];
+                $_SESSION["title"] = $item['role'];
+                header("Location: ../src/admin/index.php");
+            } elseif ($item["role"] == "manager") {
+                $_SESSION["nama"] = $item['nama'];
+                $_SESSION["role"] = $item['role'];
+                $_SESSION["title"] = $item['role'];
+                header("Location: ../src/manager/index.php");
+            } elseif ($item["role"] == "kasir") {
+                $_SESSION["nama"] = $item['nama'];
+                $_SESSION["role"] = $item['role'];
+                $_SESSION["title"] = $item['role'];
+                header("Location: ../src/kasir/index.php");
+            }
+        }
+    }
+
+    $error = true;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <!-- head -->
@@ -50,12 +90,16 @@
             <img src="../public/img/login.jpg" alt="login.bg" class="bg">
         </div>
         <div class="col-4 forum d-flex flex-column align-items-center">
-            <a href="../index.php" class="btn btn-secondary mb-3" style="width: 100%;">&LeftArrow; Home</a>
             <img src="../public/img/logo.png" alt="" class="bg_forum">
             <h3 class="mt-4 mb-0 text-center">Cafe Shop Online</h3>
             <p class="text-secondary text-center">- Login Page -</p>
 
-            <form action="../app/auth.php" method="POST" style="width: 100%;" class="mx-2 mt-5">
+            <?php if (isset($error)) : ?>
+                <span class="text-danger alert alert-danger mb-0">username atau password salah</span>
+            <?php endif; ?>
+
+            <form action="" method="POST" style="width: 100%;" class="mx-2 mt-5">
+
                 <span>Username <span class="text-danger">*</span></span>
                 <input type="text" class="form-control mb-4" autofocus required placeholder="Masukan username kamu" name="username">
 

@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `log`
+--
+
+DROP TABLE IF EXISTS `log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_pegawai` varchar(80) NOT NULL,
+  `status` varchar(80) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `log`
+--
+
+LOCK TABLES `log` WRITE;
+/*!40000 ALTER TABLE `log` DISABLE KEYS */;
+INSERT INTO `log` VALUES (4,'Zhuar','Berhasil melakukan transaksi','2022-05-12 21:03:11'),(5,'Zhuar','Berhasil melakukan transaksi','2022-05-12 23:03:47');
+/*!40000 ALTER TABLE `log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `menu`
 --
 
@@ -28,9 +54,8 @@ CREATE TABLE `menu` (
   `jumlah` int(15) DEFAULT NULL,
   `harga` bigint(80) DEFAULT NULL,
   `bayar` bigint(80) DEFAULT NULL,
-  `promo` bigint(80) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,9 +64,57 @@ CREATE TABLE `menu` (
 
 LOCK TABLES `menu` WRITE;
 /*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` VALUES (1,'Mie Goreng',0,2000,600,NULL),(2,'Nasi Goreng',0,5000,400,NULL);
+INSERT INTO `menu` VALUES (1,'Nasi Gurih',NULL,18000,NULL),(2,'Mie Ayam',NULL,10000,NULL),(3,'Nasi Goreng',NULL,20000,NULL);
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `report`
+--
+
+DROP TABLE IF EXISTS `report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(180) DEFAULT NULL,
+  `pegawai` varchar(180) DEFAULT NULL,
+  `no_meja` int(11) DEFAULT NULL,
+  `pesanan` varchar(180) DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL,
+  `bayar` int(50) NOT NULL,
+  `exp_day` date DEFAULT NULL,
+  `exp_week` date DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report`
+--
+
+LOCK TABLES `report` WRITE;
+/*!40000 ALTER TABLE `report` DISABLE KEYS */;
+INSERT INTO `report` VALUES (1,'Neville Jeremy Onorato Laia','Zhuar',2,'Nasi Gurih',18000,2,30000,'2022-05-18','2022-06-10','2022-05-12 22:48:24'),(2,'Raydika','Zhuar',8,'Mie Ayam',10000,1,20000,'2022-05-19','2022-06-11','2022-05-12 23:03:47');
+/*!40000 ALTER TABLE `report` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `report_user` AFTER INSERT ON `report` FOR EACH ROW INSERT INTO log(nama_pegawai, status) VALUES(NEW.pegawai, CONCAT("Berhasil melakukan transaksi")) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `users`
@@ -57,7 +130,7 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `role` enum('admin','manager','kasir') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +139,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (10,'Neville Ganteng','Neville','123neville456','admin');
+INSERT INTO `users` VALUES (11,'Neville','ketjehdev','000','admin'),(12,'Dio','Diozy','123','manager'),(13,'Zhuar','zhuar','321','kasir');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -79,4 +152,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-09  1:29:42
+-- Dump completed on 2022-05-13  6:06:26

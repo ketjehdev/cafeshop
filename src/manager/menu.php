@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 include '../../config/database.php';
 
 // cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+if ($_SESSION['role'] != "manager") {
     // alihkan ke halaman login
     header('location:../../auth/login.php');
 }
@@ -107,6 +107,14 @@ $query = mysqli_query($conn, $sql);
                         </a>
                     </li>
 
+                    <!-- report -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.php">
+                            <i class="icon-grid mr-2 text-secondary" data-feather="database"></i>
+                            <span class="menu-title">Laporan</span>
+                        </a>
+                    </li>
+
                     <!-- pendapatan -->
                     <li class="nav-item">
                         <a class="nav-link" href="pendapatan.php">
@@ -178,7 +186,7 @@ $query = mysqli_query($conn, $sql);
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive p-4" style="background: #fff; border-radius: 25px;">
                         <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr class="text-center table-info">
@@ -193,7 +201,7 @@ $query = mysqli_query($conn, $sql);
                                 $no = 1;
                                 while ($data = mysqli_fetch_array($query)) {
                                 ?>
-                                    <tr class="text-center table-warning">
+                                    <tr class="text-center">
                                         <td><?php echo $no++ ?></td>
                                         <td><?php echo $data['nama_menu'] ?></td>
                                         <td>Rp. <?php
@@ -207,7 +215,9 @@ $query = mysqli_query($conn, $sql);
                                             <a href='../../app/manager/delete.php?id=<?= $data['id'] ?>'>
                                                 <button class="btn btn-danger px-2"><i data-feather="trash-2"></i></button>
                                             </a>
-                                            <button class="btn btn-info px-2"><i data-feather="edit"></i></button>
+                                            <a href="editMenu.php?id=<?= $data['id'] ?>">
+                                                <button class="btn btn-info px-2"><i data-feather="edit"></i></button>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php } ?>

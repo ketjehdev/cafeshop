@@ -4,10 +4,10 @@ date_default_timezone_set('Asia/Jakarta');
 
 include '../../config/database.php';
 
-// cek apakah user sudah login apa blom
-if ($_SESSION['role'] == "") {
+// cek apakah user sudah login sesuai role apa blom
+if ($_SESSION['role'] != "admin") {
     // alihkan ke halaman login
-    header('location:../../auth/login.php');
+    header('Location:../../auth/login.php');
 }
 
 // session data
@@ -29,7 +29,7 @@ $fetchDataMenu = mysqli_fetch_array($queryMenu);
 $jumlah_menu = $fetchDataMenu['jumlah_menu'];
 
 // count net income
-$sqlNetIncome = "SELECT SUM(bayar) FROM menu";
+$sqlNetIncome = "SELECT SUM(bayar) FROM report";
 $queryNetIncome = mysqli_query($conn, $sqlNetIncome);
 $fetchDataIncome = mysqli_fetch_array($queryNetIncome);
 
@@ -157,7 +157,7 @@ $queryMenu = mysqli_query($conn, $sql);
                                     <h3 class="font-weight-bold">Hai, <?= $fname; ?>😊</h3>
                                     <h6 class="font-weight-normal mb-0">
                                         <span class="text-primary">
-                                            CSO | aplikasi management cafe kamu!
+                                            <?= $_SESSION['role']; ?> | aplikasi management cafe kamu!
                                         </span>
                                     </h6>
                                 </div>
@@ -231,6 +231,7 @@ $queryMenu = mysqli_query($conn, $sql);
                     </div>
 
                     <h4>Daftar Menu</h4>
+
                     <div class="row">
                         <?php
                         $no = 1;
