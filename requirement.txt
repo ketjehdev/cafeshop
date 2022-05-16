@@ -15,5 +15,5 @@ Admin:
 Menambahkan dan mengatur peran user -|
 Melihat log aktifitas pegawai -|
 
-INSERT INTO log (id_user, username,aksi) VALUES (NEW.id_user,NEW.username,CONCAT("User-Admin Menambahkan User Jabatan :", NEW.role))
-INSERT INTO log(nama_pegawai, status) VALUES(NEW.user, CONCAT("Berhasil melakukan transaksi"))
+
+Trigger in database : INSERT INTO log(nama_pegawai, status) VALUES(NEW.user, CONCAT("Berhasil melakukan transaksi"))
